@@ -1,4 +1,5 @@
 <resources>
 	<color name="lightBlue">#A9E3E7</color>
     <color name="lightGray">#FAFAFA</color>
+    <color name="white">#FFFFFF</color>
 </resources>

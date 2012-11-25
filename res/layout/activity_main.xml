@@ -1,20 +1,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/welcome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="0dip" >
 
     /// TODO: nested linear layout
     <LinearLayout
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:orientation="horizontal"
-		android:background="@color/lightGray">
+		android:background="@color/lightGray"
+		android:padding="0dip" >
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_new_note" />
+            android:layout_height="match_parent"
+            android:padding="0dip"
+            android:text="@string/button_new_note" 
+            android:onClick="createNote"/>
         
     </LinearLayout>
     
