@@ -2,4 +2,5 @@
 	<color name="lightBlue">#A9E3E7</color>
     <color name="lightGray">#FAFAFA</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

@@ -12,13 +12,19 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:name=".ListNoteActivity"
+            android:label="@string/title_activity_list_note" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!--  register content provider -->
+        <provider 
+            android:name=".contentprovider.NoteContentProvider"
+            android:authorities="com.rocket.smartnote.contentprovider" >            
+        </provider>
     </application>
 
 </manifest>
