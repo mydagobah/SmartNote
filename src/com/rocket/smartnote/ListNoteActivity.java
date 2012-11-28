@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -34,7 +36,12 @@ public class ListNoteActivity extends ListActivity {
         setContentView(R.layout.activity_list_note);
         
         adapter = new NotesDBAdapter(this);
-        adapter.open();
+        try {
+        	adapter.open();
+        } catch(SQLException se) {
+        	Log.w("Main","Failed to open adapter.");
+        }
+        
         fillData();
         registerForContextMenu(getListView());
     }
