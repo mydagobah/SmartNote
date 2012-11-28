@@ -36,7 +36,8 @@ public class NotesDBAdapter {
 	}
 	
 	public void close() {
-		dbHelper.close();
+		if (dbHelper != null)
+			dbHelper.close();
 	}
 	
 	/**

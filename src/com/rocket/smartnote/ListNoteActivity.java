@@ -46,6 +46,13 @@ public class ListNoteActivity extends ListActivity {
         registerForContextMenu(getListView());
     }
 
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	
+    	if (adapter != null) adapter.close();
+    }
+    
     /**
      * Fetch all notes from DB and list their title in the list view
      */
