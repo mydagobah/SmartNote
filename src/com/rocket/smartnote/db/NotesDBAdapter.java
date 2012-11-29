@@ -53,7 +53,7 @@ public class NotesDBAdapter {
         ContentValues initialValues = new ContentValues();
         initialValues.put(NoteTable.COLUMN_TITLE, title);
         initialValues.put(NoteTable.COLUMN_CONTENT, body);
-        initialValues.put(NoteTable.COLUMN_TIMESTAMP, 1);
+        initialValues.put(NoteTable.COLUMN_TIMESTAMP, 123456);
         return db.insert(NoteTable.TABLE_NAME, null, initialValues);
     }
     

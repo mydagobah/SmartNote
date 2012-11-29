@@ -61,10 +61,10 @@ public class ListNoteActivity extends ListActivity {
     	startManagingCursor(notesCursor);
     	
     	// Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{ NoteTable.COLUMN_TITLE };
+        String[] from = new String[]{ NoteTable.COLUMN_TITLE, NoteTable.COLUMN_TIMESTAMP };
 
         // and an array of the fields we want to bind those fields to (in this case just text1)
-        int[] to = new int[]{R.id.label};
+        int[] to = new int[]{R.id.label, R.id.dates };
 
         // Now create a simple cursor adapter and set it to display
         SimpleCursorAdapter notes = 

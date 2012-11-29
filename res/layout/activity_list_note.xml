@@ -7,16 +7,19 @@
     android:background="@color/black"
     android:orientation="vertical" >
     
-    <ListView 
+    
+    <ListView
         android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
-    
-    <TextView 
+
+    <TextView
         android:id="@+id/android:empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_notes" />
+
     
+
 </LinearLayout>
