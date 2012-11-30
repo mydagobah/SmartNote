@@ -4,7 +4,6 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.os.Bundle;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -13,12 +12,13 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class ListNoteActivity extends ListActivity {
+public class ListNoteActivity extends CustomWindow implements View.OnTouchListener{
 	
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
@@ -33,7 +33,13 @@ public class ListNoteActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_note);
+        
+        this.navTitle.setText("Home");
+        this.iconTitle.setText("New");
+        this.icon.setImageResource(R.drawable.collections_labels);   
+        
+        this.iconTitle.setOnTouchListener(this);
+        
         
         adapter = new NotesDBAdapter(this);
         try {
@@ -46,6 +52,13 @@ public class ListNoteActivity extends ListActivity {
         registerForContextMenu(getListView());
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+    	createNote();
+    	return true;
+    }
+    
+    
     @Override
     public void onDestroy() {
     	super.onDestroy();

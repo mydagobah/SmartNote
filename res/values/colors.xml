@@ -1,3 +1,4 @@
 <resources>
     <color name="black">#000000</color>
+    <color name="separator">#000333</color>
 </resources>

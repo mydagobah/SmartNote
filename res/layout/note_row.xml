@@ -9,8 +9,8 @@
     <TextView 
         android:id="@+id/listheader"
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#FFFFFF" /> 
+        android:layout_height="5dp"
+        android:background="@color/separator" /> 
            
     <TextView
         android:id="@+id/dates"

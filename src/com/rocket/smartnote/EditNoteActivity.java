@@ -4,22 +4,52 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class EditNoteActivity extends Activity {
 
+	private static final int ACTIVITY_CREATE = 0;
 	private EditText titleText;
 	private EditText contentText;
 	private Long rowId;
 	private NotesDBAdapter adapter;
+	protected TextView navTitle;
+	protected TextView iconTitle;
+	protected ImageView icon;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+     // apply custom theme
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.activity_list_note);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+        
+        navTitle = (TextView) findViewById(R.id.nav_title);
+        iconTitle = (TextView) findViewById(R.id.icon_title);
+        icon = (ImageView) findViewById(R.id.icon);
+        
+        navTitle.setText("Edit");
+        iconTitle.setText("Home");
+        icon.setImageResource(R.drawable.navigation_back); 
+        
+        this.iconTitle.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+            	Intent intent = new Intent(EditNoteActivity.this, ListNoteActivity.class);
+            	startActivityForResult(intent, ACTIVITY_CREATE);
+            	return true;
+            }
+        });
+        
         adapter = new NotesDBAdapter(this);
         adapter.open();
 
@@ -47,6 +77,7 @@ public class EditNoteActivity extends Activity {
             }
         });
     }
+	
 	
 	private void populateFields() {
         if (rowId != null) {
