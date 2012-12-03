@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -23,7 +22,6 @@ public class EditNoteActivity extends Activity {
 	private Long rowId;
 	private NotesDBAdapter adapter;
 	protected TextView navTitle;
-	protected TextView iconTitle;
 	protected ImageView icon;
 	
 	@Override
@@ -35,18 +33,15 @@ public class EditNoteActivity extends Activity {
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
         navTitle = (TextView) findViewById(R.id.nav_title);
-        iconTitle = (TextView) findViewById(R.id.icon_title);
         icon = (ImageView) findViewById(R.id.icon);
         
         navTitle.setText("Edit");
-        iconTitle.setText("Home");
         icon.setImageResource(R.drawable.navigation_back); 
         
-        this.iconTitle.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
+        this.icon.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
             	Intent intent = new Intent(EditNoteActivity.this, ListNoteActivity.class);
             	startActivityForResult(intent, ACTIVITY_CREATE);
-            	return true;
             }
         });
         

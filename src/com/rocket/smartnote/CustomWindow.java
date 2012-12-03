@@ -25,7 +25,6 @@ public class CustomWindow extends ListActivity {
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
         navTitle = (TextView) findViewById(R.id.nav_title);
-        iconTitle = (TextView) findViewById(R.id.icon_title);
         icon = (ImageView) findViewById(R.id.icon);
     }
 }

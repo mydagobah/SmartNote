@@ -1,45 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="35dip"
-    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingLeft="5dip"
     android:background="#F0F0F0" >
 
     <ImageView 
-        android:id="@+id/header"
+        android:id="@+id/logo"
         android:src="@drawable/ic_launcher"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"/>
     
     <TextView 
             android:id="@+id/nav_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:paddingLeft="60dip"
-            android:gravity="center" />
-    
-    <LinearLayout 
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="right|center_vertical"
-        android:paddingRight="5dip">
+            android:layout_centerInParent="true" />
         
-        <TextView 
-            android:id="@+id/icon_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="11dip"
-            android:paddingRight="5dip" />
-        
-        <ImageView 
-            android:id="@+id/icon"
-     		android:layout_width="wrap_content"
-     		android:layout_height="wrap_content" />
-        
-     </LinearLayout>
-    
-</LinearLayout>
+    <ImageView 
+        android:id="@+id/icon"
+ 		android:layout_width="wrap_content"
+ 		android:layout_height="wrap_content" 
+ 		android:layout_alignParentRight="true"/>
+          
+</RelativeLayout>

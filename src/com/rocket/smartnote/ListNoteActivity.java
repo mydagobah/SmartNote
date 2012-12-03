@@ -34,12 +34,15 @@ public class ListNoteActivity extends CustomWindow implements View.OnTouchListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        this.navTitle.setText("Home");
-        this.iconTitle.setText("New");
+        this.navTitle.setText("Note List");
         this.icon.setImageResource(R.drawable.collections_labels);   
         
-        this.iconTitle.setOnTouchListener(this);
-        
+        this.icon.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Intent intent = new Intent(ListNoteActivity.this, EditNoteActivity.class);
+            	startActivityForResult(intent, ACTIVITY_CREATE);
+            }
+        });       
         
         adapter = new NotesDBAdapter(this);
         try {
