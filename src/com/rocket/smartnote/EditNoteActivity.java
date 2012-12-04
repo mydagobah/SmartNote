@@ -4,7 +4,6 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 public class EditNoteActivity extends Activity {
 
-	private static final int ACTIVITY_CREATE = 0;
 	private EditText titleText;
 	private EditText contentText;
 	private Long rowId;
@@ -27,11 +25,13 @@ public class EditNoteActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     // apply custom theme
+     
+        // apply custom theme
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_list_note);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
+        // setup title bar
         navTitle = (TextView) findViewById(R.id.nav_title);
         icon = (ImageView) findViewById(R.id.icon);
         
@@ -40,25 +40,26 @@ public class EditNoteActivity extends Activity {
         
         this.icon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Intent intent = new Intent(EditNoteActivity.this, ListNoteActivity.class);
-            	startActivityForResult(intent, ACTIVITY_CREATE);
+            	//Intent intent = new Intent(EditNoteActivity.this, ListNoteActivity.class);
+            	//startActivityForResult(intent, ACTIVITY_CREATE);
+            	finish();
             }
         });
         
+        // initialize db adapter
         adapter = new NotesDBAdapter(this);
         adapter.open();
 
         setContentView(R.layout.activity_edit_note);
-        setTitle(R.string.title_edit);
 
         titleText = (EditText) findViewById(R.id.title);
         contentText = (EditText) findViewById(R.id.content);
-
         Button saveButton = (Button) findViewById(R.id.save);
 
         rowId = (savedInstanceState == null) ? null :
             (Long) savedInstanceState.getSerializable(NoteTable.COLUMN_ID);
-		if (rowId == null) {
+		
+        if (rowId == null) {
 			Bundle extras = getIntent().getExtras();
 			rowId = extras != null ? extras.getLong(NoteTable.COLUMN_ID) : null;
 		}
@@ -67,7 +68,7 @@ public class EditNoteActivity extends Activity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                setResult(RESULT_OK);
+            	setResult(RESULT_OK);          
                 finish();
             }
         });
@@ -78,6 +79,7 @@ public class EditNoteActivity extends Activity {
         if (rowId != null) {
             Cursor note = adapter.fetchNote(rowId);
             startManagingCursor(note);
+            
             titleText.setText(note.getString(
                     note.getColumnIndexOrThrow(NoteTable.COLUMN_TITLE)));
             contentText.setText(note.getString(
@@ -109,6 +111,9 @@ public class EditNoteActivity extends Activity {
         String content = contentText.getText().toString();
 
         if (rowId == null) {
+        	// if title is empty, do not save
+        	if (title.isEmpty()) return;
+        	
             long id = adapter.createNote(title, content);
             if (id > 0) {
                 rowId = id;

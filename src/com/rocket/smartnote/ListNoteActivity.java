@@ -12,13 +12,12 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class ListNoteActivity extends CustomWindow implements View.OnTouchListener{
+public class ListNoteActivity extends CustomWindow {
 	
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;
@@ -34,6 +33,7 @@ public class ListNoteActivity extends CustomWindow implements View.OnTouchListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // setup title bar
         this.navTitle.setText("Note List");
         this.icon.setImageResource(R.drawable.collections_labels);   
         
@@ -44,6 +44,7 @@ public class ListNoteActivity extends CustomWindow implements View.OnTouchListen
             }
         });       
         
+        // db adapter initialize
         adapter = new NotesDBAdapter(this);
         try {
         	adapter.open();
@@ -51,16 +52,10 @@ public class ListNoteActivity extends CustomWindow implements View.OnTouchListen
         	Log.w("Main","Failed to open adapter.");
         }
         
+        // populate data
         fillData();
         registerForContextMenu(getListView());
     }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-    	createNote();
-    	return true;
-    }
-    
     
     @Override
     public void onDestroy() {
@@ -77,14 +72,15 @@ public class ListNoteActivity extends CustomWindow implements View.OnTouchListen
     	startManagingCursor(notesCursor);
     	
     	// Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{ NoteTable.COLUMN_TITLE, NoteTable.COLUMN_TIMESTAMP };
+        String[] from = new String[]{ NoteTable.COLUMN_TITLE, NoteTable.COLUMN_MONTH, NoteTable.COLUMN_DAY };
 
         // and an array of the fields we want to bind those fields to (in this case just text1)
-        int[] to = new int[]{R.id.label, R.id.dates };
+        int[] to = new int[]{R.id.label, R.id.month, R.id.day };
 
         // Now create a simple cursor adapter and set it to display
         SimpleCursorAdapter notes = 
             new SimpleCursorAdapter(this, R.layout.note_row, notesCursor, from, to);
+        
         setListAdapter(notes); 	
     }
     

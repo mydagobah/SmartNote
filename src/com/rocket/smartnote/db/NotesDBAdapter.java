@@ -1,5 +1,7 @@
 package com.rocket.smartnote.db;
 
+import java.util.Calendar;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -50,10 +52,16 @@ public class NotesDBAdapter {
      * @return rowId or -1 if failed
      */
     public long createNote(String title, String body) {
+    	
+    	
         ContentValues initialValues = new ContentValues();
+        Calendar cal = Calendar.getInstance();
+        
         initialValues.put(NoteTable.COLUMN_TITLE, title);
-        initialValues.put(NoteTable.COLUMN_CONTENT, body);
-        initialValues.put(NoteTable.COLUMN_TIMESTAMP, 123456);
+        initialValues.put(NoteTable.COLUMN_CONTENT, body);   
+        initialValues.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
+        initialValues.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
+        initialValues.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
         return db.insert(NoteTable.TABLE_NAME, null, initialValues);
     }
     
@@ -105,9 +113,16 @@ public class NotesDBAdapter {
      * @return true if the note was successfully updated, false otherwise
      */
     public boolean updateNote(long rowId, String title, String body) {
+    	if ((title == null) || (title.equals(""))) return false;
+    	
+    	Calendar cal = Calendar.getInstance();
+    	
         ContentValues args = new ContentValues();
         args.put(NoteTable.COLUMN_TITLE, title);
         args.put(NoteTable.COLUMN_CONTENT, body);
+        args.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
+        args.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
+        args.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
 
         return db.update(NoteTable.TABLE_NAME, args, 
         		NoteTable.COLUMN_ID + "=" + rowId, null) > 0;
