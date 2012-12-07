@@ -38,12 +38,16 @@ public class LocationHandler {
 		return locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
 	
+	public boolean networkEnabled() {
+		return locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+	}
+	
 	public void captureLocation() {		
 		Location gpsLocation = null;
         Location networkLocation = null;
         
         System.out.println("in captureLocaiton");
-        //locMan.removeUpdates(listener);
+        locMan.removeUpdates(listener);
                 
         // Request updates from both fine (gps) and coarse (network) providers.
         gpsLocation = requestUpdatesFromProvider(
@@ -62,6 +66,16 @@ public class LocationHandler {
         }
 	}
 	
+	private Location requestUpdatesFromProvider(final String provider, final int errorResId) {
+        Location location = null;
+       
+        if (locMan.isProviderEnabled(provider)) {
+            locMan.requestLocationUpdates(provider, ONE_SECONDS, ONE_METERS, listener);
+            location = locMan.getLastKnownLocation(provider);
+        }
+        return location;
+    }
+		
 	private void updateLocation(Location location) {	        
     	// Since the geocoding API is synchronous and may take a while.  You don't want to lock
         // up the UI thread.  Invoking reverse geocoding in an AsyncTask.
@@ -73,7 +87,7 @@ public class LocationHandler {
         try {
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
         } catch (IOException e) {
-            latest = "Location Error";
+            latest = "Location not available";
         }
         if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
@@ -83,19 +97,8 @@ public class LocationHandler {
                     address.getLocality(),
                     address.getCountryName());                
         }
-        else {
-        	latest = "fail";
-        }
     }
-	private Location requestUpdatesFromProvider(final String provider, final int errorResId) {
-        Location location = null;
-       
-        if (locMan.isProviderEnabled(provider)) {
-            locMan.requestLocationUpdates(provider, ONE_SECONDS, ONE_METERS, listener);
-            location = locMan.getLastKnownLocation(provider);
-        }
-        return location;
-    }
+	
 	private final LocationListener listener = new LocationListener() {	
         @Override
         public void onLocationChanged(Location location) {

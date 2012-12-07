@@ -23,8 +23,10 @@ public class EditNoteActivity extends Activity {
 	private EditText contentText;
 	private Long rowId;
 	private NotesDBAdapter adapter;
+	private LocationHandler locHandler;
 	protected TextView navTitle;
 	protected ImageView icon;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,13 +76,12 @@ public class EditNoteActivity extends Activity {
 		}
 
         // check location setting
-        LocationHandler locHandler = new LocationHandler(this);
+        locHandler = new LocationHandler(this);
         if (!locHandler.gpsEnabled()) {
-        	alertBox();
+        	gpsAlertBox();
         }
         locHandler.captureLocation();
-        
-        
+               
 		populateFields();
     }
 	
@@ -136,15 +137,46 @@ public class EditNoteActivity extends Activity {
     }
     
     // Method to launch GPS Settings
-    private void enableLocationSettings() {
+    private void enableGPSSettings() {
         Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(settingsIntent);
     }
     
+ // Method to launch Network Settings
+    private void enableNetworkSettings() {
+        Intent settingsIntent = new Intent(Intent.ACTION_MAIN);
+        settingsIntent.setClassName("com.android.phone", "com.android.phone.NetworkSetting");
+        startActivity(settingsIntent);
+    }
     /**
      * Dialog to prompt users to enable GPS on the device.
      */
-    private void alertBox() {
+    private void networkAlertBox() {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.enable_network)
+            .setMessage(R.string.enable_network_dialog)
+            .setCancelable(false)
+            .setPositiveButton(R.string.network_posBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    enableNetworkSettings();
+                }
+             })
+             .setNegativeButton(R.string.network_negBtn, new DialogInterface.OnClickListener() {					
+            	@Override
+            	public void onClick(DialogInterface dialog, int which) {
+            		if (!locHandler.gpsEnabled())
+            			gpsAlertBox();
+            		
+            		dialog.cancel();						
+            	}
+		     }).create().show();
+     }
+    
+    /**
+     * Dialog to prompt users to enable GPS on the device.
+     */
+    private void gpsAlertBox() {
         new AlertDialog.Builder(this)
             .setTitle(R.string.enable_gps)
             .setMessage(R.string.enable_gps_dialog)
@@ -152,7 +184,7 @@ public class EditNoteActivity extends Activity {
             .setPositiveButton(R.string.gps_posBtn, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    enableLocationSettings();
+                    enableGPSSettings();
                 }
              })
              .setNegativeButton(R.string.gps_negBtn, new DialogInterface.OnClickListener() {					
