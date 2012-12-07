@@ -77,11 +77,10 @@ public class EditNoteActivity extends Activity {
         LocationHandler locHandler = new LocationHandler(this);
         if (!locHandler.gpsEnabled()) {
         	alertBox();
-        	System.out.println("with alertBox");
         }
-        else {
-        	System.out.println("GPS enabled");
-        }
+        locHandler.captureLocation();
+        
+        
 		populateFields();
     }
 	
@@ -139,7 +138,6 @@ public class EditNoteActivity extends Activity {
     // Method to launch GPS Settings
     private void enableLocationSettings() {
         Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        //Intent settingsIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
         startActivity(settingsIntent);
     }
     

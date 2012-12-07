@@ -17,6 +17,7 @@ public class NotesDBAdapter {
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 	private final Context ctx;
+	private LocationHandler location;
 	
 	/**
 	 * Constructor
@@ -24,6 +25,8 @@ public class NotesDBAdapter {
 	 */
 	public NotesDBAdapter(Context context) {
 		this.ctx = context;
+		location = new LocationHandler(ctx);
+		location.captureLocation();
 	}
 	
 	/**
@@ -60,14 +63,12 @@ public class NotesDBAdapter {
     	
         ContentValues initialValues = new ContentValues();
         Calendar cal = Calendar.getInstance();
-        LocationHandler location = new LocationHandler(ctx);
         
         initialValues.put(NoteTable.COLUMN_TITLE, title);
         initialValues.put(NoteTable.COLUMN_CONTENT, body);   
         initialValues.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
         initialValues.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
         initialValues.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
-        
         initialValues.put(NoteTable.COLUMN_LOCATION, location.getLocation());
         return db.insert(NoteTable.TABLE_NAME, null, initialValues);
     }
@@ -130,6 +131,7 @@ public class NotesDBAdapter {
         args.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
         args.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
         args.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
+        args.put(NoteTable.COLUMN_LOCATION, location.getLocation());
 
         return db.update(NoteTable.TABLE_NAME, args, 
         		NoteTable.COLUMN_ID + "=" + rowId, null) > 0;
