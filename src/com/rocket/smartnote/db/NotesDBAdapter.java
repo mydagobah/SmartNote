@@ -2,11 +2,15 @@ package com.rocket.smartnote.db;
 
 import java.util.Calendar;
 
+import com.rocket.smartnote.LocationHandler;
+
 import android.content.ContentValues;
 import android.content.Context;
+
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
 
 public class NotesDBAdapter {
 	
@@ -56,12 +60,15 @@ public class NotesDBAdapter {
     	
         ContentValues initialValues = new ContentValues();
         Calendar cal = Calendar.getInstance();
+        LocationHandler location = new LocationHandler(ctx);
         
         initialValues.put(NoteTable.COLUMN_TITLE, title);
         initialValues.put(NoteTable.COLUMN_CONTENT, body);   
         initialValues.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
         initialValues.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
         initialValues.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
+        
+        initialValues.put(NoteTable.COLUMN_LOCATION, location.getLocation());
         return db.insert(NoteTable.TABLE_NAME, null, initialValues);
     }
     
@@ -127,4 +134,6 @@ public class NotesDBAdapter {
         return db.update(NoteTable.TABLE_NAME, args, 
         		NoteTable.COLUMN_ID + "=" + rowId, null) > 0;
     }
+    
+    
 }

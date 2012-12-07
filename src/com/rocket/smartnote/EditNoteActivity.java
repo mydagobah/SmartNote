@@ -4,8 +4,12 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -25,7 +29,7 @@ public class EditNoteActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     
+                
         // apply custom theme
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_list_note);
@@ -40,8 +44,6 @@ public class EditNoteActivity extends Activity {
         
         this.icon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	//Intent intent = new Intent(EditNoteActivity.this, ListNoteActivity.class);
-            	//startActivityForResult(intent, ACTIVITY_CREATE);
             	finish();
             }
         });
@@ -51,11 +53,18 @@ public class EditNoteActivity extends Activity {
         adapter.open();
 
         setContentView(R.layout.activity_edit_note);
-
+        
         titleText = (EditText) findViewById(R.id.title);
         contentText = (EditText) findViewById(R.id.content);
+        
         Button saveButton = (Button) findViewById(R.id.save);
-
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	setResult(RESULT_OK);          
+                finish();
+            }
+        });
+        
         rowId = (savedInstanceState == null) ? null :
             (Long) savedInstanceState.getSerializable(NoteTable.COLUMN_ID);
 		
@@ -64,17 +73,21 @@ public class EditNoteActivity extends Activity {
 			rowId = extras != null ? extras.getLong(NoteTable.COLUMN_ID) : null;
 		}
 
+        // check location setting
+        LocationHandler locHandler = new LocationHandler(this);
+        if (!locHandler.gpsEnabled()) {
+        	alertBox();
+        	System.out.println("with alertBox");
+        }
+        else {
+        	System.out.println("GPS enabled");
+        }
 		populateFields();
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	setResult(RESULT_OK);          
-                finish();
-            }
-        });
     }
 	
-	
+	/**
+	 * fill data in the fields if it is to edit an existing note
+	 */
 	private void populateFields() {
         if (rowId != null) {
             Cursor note = adapter.fetchNote(rowId);
@@ -122,4 +135,33 @@ public class EditNoteActivity extends Activity {
             adapter.updateNote(rowId, title, content);
         }
     }
+    
+    // Method to launch GPS Settings
+    private void enableLocationSettings() {
+        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        //Intent settingsIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+        startActivity(settingsIntent);
+    }
+    
+    /**
+     * Dialog to prompt users to enable GPS on the device.
+     */
+    private void alertBox() {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.enable_gps)
+            .setMessage(R.string.enable_gps_dialog)
+            .setCancelable(false)
+            .setPositiveButton(R.string.gps_posBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    enableLocationSettings();
+                }
+             })
+             .setNegativeButton(R.string.gps_negBtn, new DialogInterface.OnClickListener() {					
+            	@Override
+            	public void onClick(DialogInterface dialog, int which) {
+            		dialog.cancel();						
+            	}
+		     }).create().show();
+     }
 }

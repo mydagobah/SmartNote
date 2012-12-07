@@ -72,10 +72,13 @@ public class ListNoteActivity extends CustomWindow {
     	startManagingCursor(notesCursor);
     	
     	// Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{ NoteTable.COLUMN_TITLE, NoteTable.COLUMN_MONTH, NoteTable.COLUMN_DAY };
+        String[] from = new String[]{ NoteTable.COLUMN_TITLE, 
+        							  NoteTable.COLUMN_MONTH, 
+        							  NoteTable.COLUMN_DAY,
+        							  NoteTable.COLUMN_LOCATION };
 
         // and an array of the fields we want to bind those fields to (in this case just text1)
-        int[] to = new int[]{R.id.label, R.id.month, R.id.day };
+        int[] to = new int[]{R.id.label, R.id.month, R.id.day, R.id.location };
 
         // Now create a simple cursor adapter and set it to display
         SimpleCursorAdapter notes = 

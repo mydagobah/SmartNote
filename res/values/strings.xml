@@ -12,4 +12,10 @@
 	<string name="title">Title</string>
 	<string name="content">Content</string>
 	<string name="content_hint">Type your note here &#8230;</string>
+	
+	<string name="enable_gps">GPS Status</string>
+	<string name="enable_gps_dialog">Your GPS is disabled</string>
+	<string name="gps_posBtn">GPS On</string>
+	<string name="gps_negBtn">Stay Off</string>
+	
 </resources>
