@@ -87,6 +87,14 @@
 		android:layout_below="@id/title"
 		android:padding="5dip"
 		android:hint="@string/content_hint"
-		android:background="#F3F781"/>	
+		android:background="#F3F781"/>
+
+	<ImageView
+	    android:id="@+id/imageView"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true"
+	    android:src="@android:drawable/gallery_thumb" />
 	
 </RelativeLayout>
