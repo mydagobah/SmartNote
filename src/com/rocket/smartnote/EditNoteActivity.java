@@ -53,8 +53,6 @@ public class EditNoteActivity extends Activity {
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
         setContentView(R.layout.activity_edit_note);
-        // setup OUTPUT_FILE
-        //OUTPUT_FILE = Environment.getExternalStorageDirectory()+"/audiorecorder.3gpp";
         
         // setup title bar
         navTitle = (TextView) findViewById(R.id.nav_title);
