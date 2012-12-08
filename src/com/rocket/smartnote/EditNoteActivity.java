@@ -6,14 +6,10 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -27,12 +23,13 @@ public class EditNoteActivity extends Activity {
 	private EditText contentText;
 	private Long rowId;
 	private NotesDBAdapter adapter;
-	private LocationHandler locHandler;
 	protected TextView navTitle;
-	protected ImageView icon;
+	protected ImageView navIcon;
 	protected ImageView photoIcon;
 	protected ImageView recordIcon;
+	protected ImageView stopRecordIcon;
 	protected ImageView playIcon;
+	protected ImageView stopIcon;
 		
 	// set up media player
 	private MediaPlayer  mediaPlayer;
@@ -40,8 +37,7 @@ public class EditNoteActivity extends Activity {
 	
 	//private String OUTPUT_FILE;
 	private static final String OUTPUT_FILE= "/sdcard/recordoutput.3gpp";
-	
-	
+		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,19 +52,20 @@ public class EditNoteActivity extends Activity {
         
         // setup title bar
         navTitle = (TextView) findViewById(R.id.nav_title);
-        icon = (ImageView) findViewById(R.id.icon);
+        navIcon = (ImageView) findViewById(R.id.icon);
         
         navTitle.setText("Edit");
-        icon.setImageResource(R.drawable.navigation_back); 
+        navIcon.setImageResource(R.drawable.navigation_back); 
         
-        this.icon.setOnClickListener(new View.OnClickListener() {
+        navIcon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	finish();
             }
         });
         
         // setup toolbar
-        
+        photoIcon = (ImageView) findViewById(R.id.photo);
+        playIcon = (ImageView) findViewById(R.id.play);
         
         // initialize db adapter
         adapter = new NotesDBAdapter(this);
@@ -94,17 +91,15 @@ public class EditNoteActivity extends Activity {
 			Bundle extras = getIntent().getExtras();
 			rowId = extras != null ? extras.getLong(NoteTable.COLUMN_ID) : null;
 		}
-
-        // check location setting
-        locHandler = new LocationHandler(this);
-        if (!locHandler.gpsEnabled()) {
-        	gpsAlertBox();
-        }
-        locHandler.captureLocation();
                
 		populateFields();
     }
+
 	
+//	public void insertPhoto(View view) {
+//		photoIcon.setAlpha(180);
+//	}
+		
 	/** audio part */
 	/** buttonTapped method for recording buttons */
     public void buttonTapped(View view) {
@@ -244,63 +239,5 @@ public class EditNoteActivity extends Activity {
             adapter.updateNote(rowId, title, content);
         }
     }
-    
-    // Method to launch GPS Settings
-    private void enableGPSSettings() {
-        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(settingsIntent);
-    }
-    
- // Method to launch Network Settings
-    private void enableNetworkSettings() {
-        Intent settingsIntent = new Intent(Intent.ACTION_MAIN);
-        settingsIntent.setClassName("com.android.phone", "com.android.phone.NetworkSetting");
-        startActivity(settingsIntent);
-    }
-    /**
-     * Dialog to prompt users to enable GPS on the device.
-     */
-    private void networkAlertBox() {
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.enable_network)
-            .setMessage(R.string.enable_network_dialog)
-            .setCancelable(false)
-            .setPositiveButton(R.string.network_posBtn, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    enableNetworkSettings();
-                }
-             })
-             .setNegativeButton(R.string.network_negBtn, new DialogInterface.OnClickListener() {					
-            	@Override
-            	public void onClick(DialogInterface dialog, int which) {
-            		if (!locHandler.gpsEnabled())
-            			gpsAlertBox();
-            		
-            		dialog.cancel();						
-            	}
-		     }).create().show();
-     }
-    
-    /**
-     * Dialog to prompt users to enable GPS on the device.
-     */
-    private void gpsAlertBox() {
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.enable_gps)
-            .setMessage(R.string.enable_gps_dialog)
-            .setCancelable(false)
-            .setPositiveButton(R.string.gps_posBtn, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    enableGPSSettings();
-                }
-             })
-             .setNegativeButton(R.string.gps_negBtn, new DialogInterface.OnClickListener() {					
-            	@Override
-            	public void onClick(DialogInterface dialog, int which) {
-            		dialog.cancel();						
-            	}
-		     }).create().show();
-     }
+       
 }

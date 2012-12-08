@@ -11,7 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
         android:layout_alignParentLeft="true"
-        android:paddingRight="10dip" />
+        android:fitsSystemWindows="true"
+        android:background="@drawable/button"
+        android:clickable="true" 
+        />
     
     <ImageView
         android:id="@+id/record"
@@ -20,6 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/photo"
         android:layout_toRightOf="@id/photo"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:focusable="true"
+        android:background="@drawable/button"
         android:onClick="buttonTapped" />
     
      <ImageView
@@ -29,7 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/record"
         android:layout_alignBaseline="@id/photo"
-        android:onClick="buttonTapped" />
+        android:onClick="buttonTapped"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="@drawable/button" />
 
     <ImageView
         android:id="@+id/play"
@@ -38,7 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/record_stop"
         android:layout_alignBaseline="@id/photo"
-        android:onClick="buttonTapped" />
+        android:onClick="buttonTapped"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="@drawable/button" />
     
     <ImageView
         android:id="@+id/stop"
@@ -47,7 +60,10 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/play"
         android:layout_alignBaseline="@id/photo"
-        android:onClick="buttonTapped" />
+        android:onClick="buttonTapped"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="@drawable/button" />
     
     <ImageButton
         android:id="@+id/save"
@@ -55,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="#81BEF7" />
+        android:background="@drawable/button" />
     
 	<EditText android:id="@+id/title" 
 	  	android:layout_width="match_parent"

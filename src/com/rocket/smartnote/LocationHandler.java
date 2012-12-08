@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -46,7 +48,6 @@ public class LocationHandler {
 		Location gpsLocation = null;
         Location networkLocation = null;
         
-        System.out.println("in captureLocaiton");
         locMan.removeUpdates(listener);
                 
         // Request updates from both fine (gps) and coarse (network) providers.
@@ -179,5 +180,6 @@ public class LocationHandler {
         }
         return provider1.equals(provider2);
     }
-	    
+	  
+    
 }

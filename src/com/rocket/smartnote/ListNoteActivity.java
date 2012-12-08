@@ -4,6 +4,9 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.os.Bundle;
+import android.provider.Settings;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -25,6 +28,7 @@ public class ListNoteActivity extends CustomWindow {
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	
 	private NotesDBAdapter adapter;
+	private LocationHandler locHandler;
 	
 	/**
 	 * Called when the activity is first created
@@ -51,6 +55,14 @@ public class ListNoteActivity extends CustomWindow {
         } catch(SQLException se) {
         	Log.w("Main","Failed to open adapter.");
         }
+        
+        // check location setting
+        locHandler = new LocationHandler(this);
+        if (!locHandler.gpsEnabled()) {
+        	gpsAlertBox();
+        }
+        locHandler.captureLocation();
+        
         
         // populate data
         fillData();
@@ -156,4 +168,63 @@ public class ListNoteActivity extends CustomWindow {
     	super.onActivityResult(requestCode, resultCode, intent);
     	fillData();
     }
+    
+    /**
+     * Dialog to prompt users to enable GPS on the device.
+     */
+    private void gpsAlertBox() {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.enable_gps)
+            .setMessage(R.string.enable_gps_dialog)
+            .setCancelable(false)
+            .setPositiveButton(R.string.gps_posBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    enableGPSSettings();
+                }
+             })
+             .setNegativeButton(R.string.gps_negBtn, new DialogInterface.OnClickListener() {					
+            	@Override
+            	public void onClick(DialogInterface dialog, int which) {
+            		dialog.cancel();						
+            	}
+		     }).create().show();
+     }
+    
+ // Method to launch GPS Settings
+    private void enableGPSSettings() {
+        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(settingsIntent);
+    }
+    
+ // Method to launch Network Settings
+    private void enableNetworkSettings() {
+        Intent settingsIntent = new Intent(Intent.ACTION_MAIN);
+        settingsIntent.setClassName("com.android.phone", "com.android.phone.NetworkSetting");
+        startActivity(settingsIntent);
+    }
+    /**
+     * Dialog to prompt users to enable Network on the device.
+     */
+    private void networkAlertBox() {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.enable_network)
+            .setMessage(R.string.enable_network_dialog)
+            .setCancelable(false)
+            .setPositiveButton(R.string.network_posBtn, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    enableNetworkSettings();
+                }
+             })
+             .setNegativeButton(R.string.network_negBtn, new DialogInterface.OnClickListener() {					
+            	@Override
+            	public void onClick(DialogInterface dialog, int which) {
+            		if (!locHandler.gpsEnabled())
+            			gpsAlertBox();
+            		
+            		dialog.cancel();						
+            	}
+		     }).create().show();
+     }
 }

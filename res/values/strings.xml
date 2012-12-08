@@ -14,9 +14,9 @@
 	<string name="content_hint">Type your note here &#8230;</string>
 	
 	<string name="enable_gps">GPS Status</string>
-	<string name="enable_gps_dialog">Your GPS is disabled</string>
-	<string name="gps_posBtn">GPS On</string>
-	<string name="gps_negBtn">Stay Off</string>
+	<string name="enable_gps_dialog">Do you like to enable GPS to store your location, or use Network instead?</string>
+	<string name="gps_posBtn">Enable GPS</string>
+	<string name="gps_negBtn">Use Network</string>
 	<string name="enable_network">Network Status</string>
 	<string name="enable_network_dialog">Your Network is disabled</string>
 	<string name="network_posBtn">Network On</string>
