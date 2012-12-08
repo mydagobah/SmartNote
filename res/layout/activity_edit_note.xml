@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +23,34 @@
 		android:gravity="top"
 		android:hint="@string/content_hint"
 		android:background="#F3F781"/>
+
+	<Button
+	    android:id="@+id/startBtn"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="buttonTapped"
+	    android:text="Start Recording" />
+
+	<Button
+	    android:id="@+id/finishBtn"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="buttonTapped"
+	    android:text="Finish Recording" />
+
+	<Button
+	    android:id="@+id/playBtn"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="buttonTapped"
+	    android:text="Play Recording" />
+
+	<Button
+	    android:id="@+id/stopBtn"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:onClick="buttonTapped"
+	    android:text="Stop Playback" />
 	
 	<Button android:id="@+id/save" 
 	  	android:text="@string/button_save"
