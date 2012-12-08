@@ -6,11 +6,14 @@ import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -30,14 +33,17 @@ public class EditNoteActivity extends Activity {
 	protected ImageView stopRecordIcon;
 	protected ImageView playIcon;
 	protected ImageView stopIcon;
-		
+	// display the phote taken by the camera
+	protected ImageView iv;
+	
 	// set up media player
 	private MediaPlayer  mediaPlayer;
 	private MediaRecorder recorder;
 	
 	// base path for audio file (file with .3gpp format)
-	private static final String AUDIO_PATH = "/sdcard/record";
-	private String audio_file;
+	private static final String AUDIO_PATH = "/sdcard/audio";
+	private static final String IMAGE_PATH = "/sdcard/photo";
+	private String audio_file, photo_file;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,10 +73,22 @@ public class EditNoteActivity extends Activity {
             }
         });
         
-        // setup toolbar
-        photoIcon = (ImageView) findViewById(R.id.photo);
-        playIcon = (ImageView) findViewById(R.id.play);
         
+        // setup toolbar
+        iv = (ImageView) findViewById(R.id.imageView);
+        photoIcon = (ImageView) findViewById(R.id.photo);
+        photoIcon.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+				startActivityForResult(intent, 0);
+			}
+        	
+        });
+                
+        playIcon = (ImageView) findViewById(R.id.play);
+
         titleText = (EditText) findViewById(R.id.title);
         contentText = (EditText) findViewById(R.id.content);
         ImageButton saveButton = (ImageButton) findViewById(R.id.save);
@@ -83,8 +101,7 @@ public class EditNoteActivity extends Activity {
 		}
         
         populateFields();
-        
-        
+              
         // initailize audio path
         if (rowId == null) {
         	Long ts = System.currentTimeMillis();
@@ -99,10 +116,15 @@ public class EditNoteActivity extends Activity {
         });
     }
 
+	/** photo part */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (requestCode == 0) {
+    		Bitmap theImage = (Bitmap) data.getExtras().get("data");
+    		iv.setImageBitmap(theImage);
+    	}
+    }
 	
-//	public void insertPhoto(View view) {
-//		photoIcon.setAlpha(180);
-//	}
+	/** End of photo part */
 		
 	/** audio part */
 	/** buttonTapped method for recording buttons */
