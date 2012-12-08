@@ -18,11 +18,12 @@ public class NoteTable {
 	public static final String COLUMN_YEAR      = "year";
 	public static final String COLUMN_LOCATION  = "location";
 	public static final String COLUMN_RECORD_PH = "record";
+	public static final String COLUMN_PHOTO_PH  = "photo";
 	
 	// an array of all columns
 	public static final String[] COLUMNS = new String[] {
 		COLUMN_ID, COLUMN_TITLE, COLUMN_CONTENT, COLUMN_MONTH, COLUMN_DAY, 
-		COLUMN_YEAR, COLUMN_LOCATION, COLUMN_RECORD_PH };
+		COLUMN_YEAR, COLUMN_LOCATION, COLUMN_RECORD_PH, COLUMN_PHOTO_PH };
 	
 	// Database creation SQL statement
 	private static final String TABLE_CREATE = "create table " + TABLE_NAME + "("
@@ -33,7 +34,8 @@ public class NoteTable {
 			+ COLUMN_DAY       + " integer not null, "
             + COLUMN_YEAR      + " integer, "
             + COLUMN_LOCATION  + " text, "
-            + COLUMN_RECORD_PH + " text);";
+            + COLUMN_RECORD_PH + " text, "
+            + COLUMN_PHOTO_PH  + " text);";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(TABLE_CREATE);

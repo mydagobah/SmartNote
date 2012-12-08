@@ -206,7 +206,7 @@ public class ListNoteActivity extends CustomWindow {
     /**
      * Dialog to prompt users to enable Network on the device.
      */
-    private void networkAlertBox() {
+    protected void networkAlertBox() {
         new AlertDialog.Builder(this)
             .setTitle(R.string.enable_network)
             .setMessage(R.string.enable_network_dialog)
