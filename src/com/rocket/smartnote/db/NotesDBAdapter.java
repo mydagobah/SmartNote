@@ -18,6 +18,7 @@ public class NotesDBAdapter {
 	private SQLiteDatabase db;
 	private final Context ctx;
 	private LocationHandler location;
+	private static int count;
 	
 	/**
 	 * Constructor
@@ -58,9 +59,8 @@ public class NotesDBAdapter {
      * @param body - the body of the note
      * @return rowId or -1 if failed
      */
-    public long createNote(String title, String body) {
-    	
-    	
+    public long createNote(String title, String body, String audio_path) {
+    	   	
         ContentValues initialValues = new ContentValues();
         Calendar cal = Calendar.getInstance();
         
@@ -70,6 +70,8 @@ public class NotesDBAdapter {
         initialValues.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
         initialValues.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
         initialValues.put(NoteTable.COLUMN_LOCATION, location.getLocation());
+        initialValues.put(NoteTable.COLUMN_RECORD_PH, audio_path);
+        
         return db.insert(NoteTable.TABLE_NAME, null, initialValues);
     }
     
