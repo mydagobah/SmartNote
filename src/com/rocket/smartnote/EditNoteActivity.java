@@ -1,5 +1,8 @@
 package com.rocket.smartnote;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
 
@@ -8,7 +11,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
@@ -25,6 +31,11 @@ public class EditNoteActivity extends Activity {
 	private NotesDBAdapter adapter;
 	protected TextView navTitle;
 	protected ImageView icon;
+	// set up media player
+	private MediaPlayer  mediaPlayer;
+	private MediaRecorder recorder;
+	//private String OUTPUT_FILE;
+	private static final String OUTPUT_FILE= "/sdcard/recordoutput.3gpp";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,9 @@ public class EditNoteActivity extends Activity {
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_list_note);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+        
+        // setup OUTPUT_FILE
+        //OUTPUT_FILE = Environment.getExternalStorageDirectory()+"/audiorecorder.3gpp";
         
         // setup title bar
         navTitle = (TextView) findViewById(R.id.nav_title);
@@ -84,6 +98,95 @@ public class EditNoteActivity extends Activity {
         }
 		populateFields();
     }
+	
+	/** audio part */
+	/** buttonTapped method for recording buttons */
+    public void buttonTapped(View view) {
+    	switch(view.getId()) {
+    	    case R.id.startBtn:
+    	    	try {
+    	    		beginRecoding();
+    	    	} catch(Exception e) {
+    	    		e.printStackTrace();
+    	    	}
+    	    	break;
+    	    case R.id.finishBtn:
+    	    	try {
+    	    		stopRecoding();
+    	    	} catch(Exception e) {
+    	    		e.printStackTrace();
+    	    	} 
+    	    	break;
+    	    case R.id.playBtn:
+    	    	try {
+    	    		playRecoding();
+    	    	} catch(Exception e) {
+    	    		e.printStackTrace();
+    	    	}
+    	    	break;
+    	    case R.id.stopBtn:
+    	    	try {
+    	    		stopPlayback();
+    	    	} catch(Exception e) {
+    	    		e.printStackTrace();
+    	    	}
+    	    	break;
+    	}
+    }
+
+    /** End of buttonTapped method for recording buttons */
+
+	private void stopPlayback() {
+		if (mediaPlayer != null) 
+		    mediaPlayer.stop();
+	}
+
+	private void playRecoding() throws Exception {
+		ditchMediaPlayer();
+		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setDataSource(OUTPUT_FILE);
+		mediaPlayer.prepare();
+		mediaPlayer.start();
+	}
+
+	private void ditchMediaPlayer() {
+		if (mediaPlayer != null) {
+			try {
+				mediaPlayer.release();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void stopRecoding() {
+		if (recorder != null) {
+			recorder.stop();
+		}
+	}
+
+	private void beginRecoding() throws Exception {
+		ditchMediaRecorder();
+		File outFile = new File(OUTPUT_FILE);
+		
+		if (outFile.exists()) 
+			outFile.delete();
+		
+		recorder = new MediaRecorder();
+		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+		recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+		recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		recorder.setOutputFile(OUTPUT_FILE);
+		recorder.prepare();
+		recorder.start();
+		
+	}
+
+	private void ditchMediaRecorder() {
+		if(recorder != null)
+            recorder.release();
+	}
+	/** End of audio part */
 	
 	/**
 	 * fill data in the fields if it is to edit an existing note
