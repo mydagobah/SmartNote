@@ -1,7 +1,6 @@
 package com.rocket.smartnote;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
@@ -14,12 +13,11 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,9 +30,14 @@ public class EditNoteActivity extends Activity {
 	private LocationHandler locHandler;
 	protected TextView navTitle;
 	protected ImageView icon;
+	protected ImageView photoIcon;
+	protected ImageView recordIcon;
+	protected ImageView playIcon;
+		
 	// set up media player
 	private MediaPlayer  mediaPlayer;
 	private MediaRecorder recorder;
+	
 	//private String OUTPUT_FILE;
 	private static final String OUTPUT_FILE= "/sdcard/recordoutput.3gpp";
 	
@@ -64,6 +67,9 @@ public class EditNoteActivity extends Activity {
             }
         });
         
+        // setup toolbar
+        
+        
         // initialize db adapter
         adapter = new NotesDBAdapter(this);
         adapter.open();
@@ -73,7 +79,7 @@ public class EditNoteActivity extends Activity {
         titleText = (EditText) findViewById(R.id.title);
         contentText = (EditText) findViewById(R.id.content);
         
-        Button saveButton = (Button) findViewById(R.id.save);
+        ImageButton saveButton = (ImageButton) findViewById(R.id.save);
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	setResult(RESULT_OK);          
@@ -103,28 +109,28 @@ public class EditNoteActivity extends Activity {
 	/** buttonTapped method for recording buttons */
     public void buttonTapped(View view) {
     	switch(view.getId()) {
-    	    case R.id.startBtn:
+    	    case R.id.record:
     	    	try {
     	    		beginRecoding();
     	    	} catch(Exception e) {
     	    		e.printStackTrace();
     	    	}
     	    	break;
-    	    case R.id.finishBtn:
+    	    case R.id.record_stop:
     	    	try {
     	    		stopRecoding();
     	    	} catch(Exception e) {
     	    		e.printStackTrace();
     	    	} 
     	    	break;
-    	    case R.id.playBtn:
+    	    case R.id.play:
     	    	try {
     	    		playRecoding();
     	    	} catch(Exception e) {
     	    		e.printStackTrace();
     	    	}
     	    	break;
-    	    case R.id.stopBtn:
+    	    case R.id.stop:
     	    	try {
     	    		stopPlayback();
     	    	} catch(Exception e) {

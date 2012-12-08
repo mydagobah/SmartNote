@@ -1,60 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@color/white" >
     
-    <LinearLayout android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+    <ImageView 
+        android:id="@+id/photo"
+        android:src="@drawable/camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+        android:paddingRight="10dip" />
+    
+    <ImageView
+        android:id="@+id/record"
+        android:src="@drawable/record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/photo"
+        android:layout_toRightOf="@id/photo"
+        android:onClick="buttonTapped" />
+    
+     <ImageView
+        android:id="@+id/record_stop"
+        android:src="@drawable/stop_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/record"
+        android:layout_alignBaseline="@id/photo"
+        android:onClick="buttonTapped" />
 
-		<EditText android:id="@+id/title" 
-		  	android:layout_width="0dip"
-			android:layout_height="wrap_content" 
-			android:layout_weight="1"
-			android:hint="@string/title"/>
-	</LinearLayout>
+    <ImageView
+        android:id="@+id/play"
+        android:src="@drawable/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/record_stop"
+        android:layout_alignBaseline="@id/photo"
+        android:onClick="buttonTapped" />
+    
+    <ImageView
+        android:id="@+id/stop"
+        android:src="@drawable/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/play"
+        android:layout_alignBaseline="@id/photo"
+        android:onClick="buttonTapped" />
+    
+    <ImageButton
+        android:id="@+id/save"
+        android:src="@drawable/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="#81BEF7" />
+    
+	<EditText android:id="@+id/title" 
+	  	android:layout_width="match_parent"
+		android:layout_height="wrap_content" 
+		android:layout_below="@id/photo"
+		android:hint="@string/title"/>
 	
 	<EditText android:id="@+id/content" 
 	    android:layout_width="match_parent"
-		android:layout_height="0dip"
-		android:layout_weight="1"
+		android:layout_height="fill_parent"
 		android:scrollbars="vertical" 
 		android:gravity="top"
+		android:layout_below="@id/title"
+		android:padding="5dip"
 		android:hint="@string/content_hint"
-		android:background="#F3F781"/>
-
-	<Button
-	    android:id="@+id/startBtn"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:onClick="buttonTapped"
-	    android:text="Start Recording" />
-
-	<Button
-	    android:id="@+id/finishBtn"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:onClick="buttonTapped"
-	    android:text="Finish Recording" />
-
-	<Button
-	    android:id="@+id/playBtn"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:onClick="buttonTapped"
-	    android:text="Play Recording" />
-
-	<Button
-	    android:id="@+id/stopBtn"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:onClick="buttonTapped"
-	    android:text="Stop Playback" />
+		android:background="#F3F781"/>	
 	
-	<Button android:id="@+id/save" 
-	  	android:text="@string/button_save"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
-
-</LinearLayout>
+</RelativeLayout>

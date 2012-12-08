@@ -33,7 +33,7 @@
         android:paddingTop="12dp"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:gravity="center" />
     
     <TextView
