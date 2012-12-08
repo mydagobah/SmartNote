@@ -14,8 +14,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * 4. add MONTH, DAY, YEAR
 	 * 5. add LOCAION
 	 * 6. add RECORD_PH
+	 * 7. add PHOTO_PH
 	 */
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	private static final String DATABASE_NAME = "notes.db";
 	
 	public DatabaseHelper(Context context) {

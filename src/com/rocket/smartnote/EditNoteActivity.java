@@ -1,6 +1,12 @@
 package com.rocket.smartnote;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import com.rocket.smartnote.db.NoteTable;
 import com.rocket.smartnote.db.NotesDBAdapter;
@@ -9,6 +15,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -42,7 +50,7 @@ public class EditNoteActivity extends Activity {
 	
 	// base path for audio file (file with .3gpp format)
 	private static final String AUDIO_PATH = "/sdcard/audio";
-	private static final String IMAGE_PATH = "/sdcard/photo";
+	private static final String PHOTO_PATH = "/sdcard/photo";
 	private String audio_file, photo_file;
 		
 	@Override
@@ -78,9 +86,25 @@ public class EditNoteActivity extends Activity {
         iv = (ImageView) findViewById(R.id.imageView);
         photoIcon = (ImageView) findViewById(R.id.photo);
         photoIcon.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
+				// initialize photo file
+				/*
+				File _photoFile = new File(photo_file);
+				try {
+					if (!_photoFile.exists()) {
+						_photoFile.createNewFile();
+					}
+				} catch (IOException e) {
+					Toast.makeText(getApplicationContext(), "Create photo fails. Please try again.", 
+							Toast.LENGTH_SHORT).show();
+				}
+				
+				Uri _photoUri = Uri.fromFile(_photoFile);
+				
+				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, _photoUri);
+				*/
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 				startActivityForResult(intent, 0);
 			}
@@ -106,6 +130,7 @@ public class EditNoteActivity extends Activity {
         if (rowId == null) {
         	Long ts = System.currentTimeMillis();
         	audio_file = AUDIO_PATH + ts.toString() +".3gpp";
+        	photo_file = PHOTO_PATH + ts.toString() + ".jpeg";
         }
                 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -116,14 +141,68 @@ public class EditNoteActivity extends Activity {
         });
     }
 
-	/** photo part */
+	/** photo part
+	 *  Callback from photo taking action
+	 */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (requestCode == 0) {
-    		Bitmap theImage = (Bitmap) data.getExtras().get("data");
-    		iv.setImageBitmap(theImage);
+    		Bitmap p = (Bitmap) data.getExtras().get("data");
+    		iv.setImageBitmap(p);
+    		savePhoto(scalePhoto(p), photo_file);    		   	
     	}
     }
 	
+    private Bitmap scalePhoto(Bitmap bm) {
+    	int oldWidth = bm.getWidth();
+    	int oldHeight = bm.getHeight();
+    	int newWidth = 200;
+    	int newHeight = 150;
+    	float scaleWidth = ((float) newWidth) / oldWidth;
+    	float scaleHeight = ((float) newHeight) / oldHeight;
+    	Matrix matrix = new Matrix();
+    	matrix.postScale(scaleWidth, scaleHeight);
+    	Bitmap small = Bitmap.createBitmap(bm, 0, 0, oldWidth, oldHeight, matrix, true);
+    	
+    	return small;
+    }
+    
+    private boolean savePhoto(Bitmap bm, String path) {
+    	ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    	bm.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+    	File file = new File(path);
+    	FileOutputStream fos = null;
+    	try {
+			fos = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			return false;
+		}
+    	try {
+			fos.write(bytes.toByteArray());
+			fos.close();
+		} catch (IOException e) {
+			return false;
+		}
+    	  	
+    	return true;
+    }
+    
+    private Bitmap readPhotoFromPath(String path) {
+    	FileInputStream in;
+    	BufferedInputStream buf;
+    	Bitmap ret = null;
+    	
+    	try {
+			in = new FileInputStream(path);
+			buf = new BufferedInputStream(in);
+			ret = BitmapFactory.decodeStream(buf);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return ret;
+    }
+    
 	/** End of photo part */
 		
 	/** audio part */
@@ -229,6 +308,13 @@ public class EditNoteActivity extends Activity {
                     note.getColumnIndexOrThrow(NoteTable.COLUMN_CONTENT)));
             audio_file = note.getString(
             		note.getColumnIndexOrThrow(NoteTable.COLUMN_RECORD_PH));
+            photo_file = note.getString(
+            		note.getColumnIndexOrThrow(NoteTable.COLUMN_PHOTO_PH));
+ 
+            Bitmap p = readPhotoFromPath(photo_file);
+            if (p != null) {
+            	iv.setImageBitmap(p);
+            }
         }
     }
 	
@@ -259,7 +345,7 @@ public class EditNoteActivity extends Activity {
         	// if title is empty, do not save
         	if (title.isEmpty()) return;
         	
-            long id = adapter.createNote(title, content, audio_file);
+            long id = adapter.createNote(title, content, audio_file, photo_file);
             if (id > 0) {
                 rowId = id;
             }
