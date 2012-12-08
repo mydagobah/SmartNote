@@ -35,20 +35,24 @@ public class EditNoteActivity extends Activity {
 	private MediaPlayer  mediaPlayer;
 	private MediaRecorder recorder;
 	
-	//private String OUTPUT_FILE;
-	private static final String OUTPUT_FILE= "/sdcard/recordoutput.3gpp";
+	// base path for audio file (file with .3gpp format)
+	private static final String AUDIO_PATH = "/sdcard/record";
+	private String audio_file;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-                
+        
+        // initialize db adapter
+        adapter = new NotesDBAdapter(this);
+        adapter.open();
+        
         // apply custom theme
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_list_note);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         
-        // setup OUTPUT_FILE
-        //OUTPUT_FILE = Environment.getExternalStorageDirectory()+"/audiorecorder.3gpp";
+        setContentView(R.layout.activity_edit_note);
         
         // setup title bar
         navTitle = (TextView) findViewById(R.id.nav_title);
@@ -67,32 +71,32 @@ public class EditNoteActivity extends Activity {
         photoIcon = (ImageView) findViewById(R.id.photo);
         playIcon = (ImageView) findViewById(R.id.play);
         
-        // initialize db adapter
-        adapter = new NotesDBAdapter(this);
-        adapter.open();
-
-        setContentView(R.layout.activity_edit_note);
-        
         titleText = (EditText) findViewById(R.id.title);
         contentText = (EditText) findViewById(R.id.content);
-        
         ImageButton saveButton = (ImageButton) findViewById(R.id.save);
+                                             
+        rowId = (savedInstanceState == null) ? null :
+            (Long) savedInstanceState.getSerializable(NoteTable.COLUMN_ID);		
+        if (rowId == null) {
+			Bundle extras = getIntent().getExtras();
+			rowId = extras != null ? extras.getLong(NoteTable.COLUMN_ID) : null;
+		}
+        
+        populateFields();
+        
+        
+        // initailize audio path
+        if (rowId == null) {
+        	Long ts = System.currentTimeMillis();
+        	audio_file = AUDIO_PATH + ts.toString() +".3gpp";
+        }
+                
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	setResult(RESULT_OK);          
                 finish();
             }
         });
-        
-        rowId = (savedInstanceState == null) ? null :
-            (Long) savedInstanceState.getSerializable(NoteTable.COLUMN_ID);
-		
-        if (rowId == null) {
-			Bundle extras = getIntent().getExtras();
-			rowId = extras != null ? extras.getLong(NoteTable.COLUMN_ID) : null;
-		}
-               
-		populateFields();
     }
 
 	
@@ -145,7 +149,7 @@ public class EditNoteActivity extends Activity {
 	private void playRecoding() throws Exception {
 		ditchMediaPlayer();
 		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setDataSource(OUTPUT_FILE);
+		mediaPlayer.setDataSource(audio_file);
 		mediaPlayer.prepare();
 		mediaPlayer.start();
 	}
@@ -168,7 +172,7 @@ public class EditNoteActivity extends Activity {
 
 	private void beginRecoding() throws Exception {
 		ditchMediaRecorder();
-		File outFile = new File(OUTPUT_FILE);
+		File outFile = new File(audio_file);
 		
 		if (outFile.exists()) 
 			outFile.delete();
@@ -177,7 +181,7 @@ public class EditNoteActivity extends Activity {
 		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 		recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-		recorder.setOutputFile(OUTPUT_FILE);
+		recorder.setOutputFile(audio_file);
 		recorder.prepare();
 		recorder.start();
 		
@@ -201,6 +205,8 @@ public class EditNoteActivity extends Activity {
                     note.getColumnIndexOrThrow(NoteTable.COLUMN_TITLE)));
             contentText.setText(note.getString(
                     note.getColumnIndexOrThrow(NoteTable.COLUMN_CONTENT)));
+            audio_file = note.getString(
+            		note.getColumnIndexOrThrow(NoteTable.COLUMN_RECORD_PH));
         }
     }
 	
@@ -231,7 +237,7 @@ public class EditNoteActivity extends Activity {
         	// if title is empty, do not save
         	if (title.isEmpty()) return;
         	
-            long id = adapter.createNote(title, content);
+            long id = adapter.createNote(title, content, audio_file);
             if (id > 0) {
                 rowId = id;
             }

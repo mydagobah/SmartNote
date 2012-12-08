@@ -12,9 +12,7 @@
         android:layout_height="wrap_content" 
         android:layout_alignParentLeft="true"
         android:fitsSystemWindows="true"
-        android:background="@drawable/button"
-        android:clickable="true" 
-        />
+        android:background="@drawable/button" />
     
     <ImageView
         android:id="@+id/record"

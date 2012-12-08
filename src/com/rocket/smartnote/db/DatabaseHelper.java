@@ -6,7 +6,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 5;
+	/**
+	 * Migration history
+	 * 1. initial create
+	 * 2. add TIMESTAMP
+	 * 3. remove TIMESTAMP
+	 * 4. add MONTH, DAY, YEAR
+	 * 5. add LOCAION
+	 * 6. add RECORD_PH
+	 */
+	private static final int DATABASE_VERSION = 6;
 	private static final String DATABASE_NAME = "notes.db";
 	
 	public DatabaseHelper(Context context) {
