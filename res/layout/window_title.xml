@@ -5,13 +5,14 @@
     android:layout_height="35dip"
     android:orientation="horizontal"
     android:paddingLeft="5dip"
-    android:background="#F0F0F0" >
+    android:background="@color/navbg" >
 
     <ImageView 
         android:id="@+id/logo"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
+        android:paddingTop="2dip"
         android:layout_alignParentLeft="true"/>
     
     <TextView 

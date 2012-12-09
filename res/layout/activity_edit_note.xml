@@ -85,7 +85,7 @@
 		android:layout_below="@id/title"
 		android:padding="5dip"
 		android:hint="@string/content_hint"
-		android:background="#F3F781"/>
+		android:background="@color/contentbg"/>
 
 	<ImageView
 	    android:id="@+id/imageView"
