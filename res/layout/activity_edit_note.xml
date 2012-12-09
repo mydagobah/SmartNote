@@ -7,6 +7,7 @@
     
     <ImageView 
         android:id="@+id/photo"
+        android:contentDescription="@string/photoDescription"
         android:src="@drawable/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
@@ -17,6 +18,7 @@
     <ImageView
         android:id="@+id/record"
         android:src="@drawable/record"
+        android:contentDescription="@string/recordDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/photo"
@@ -30,6 +32,7 @@
      <ImageView
         android:id="@+id/record_stop"
         android:src="@drawable/stop_record"
+        android:contentDescription="@string/stopRecordDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/record"
@@ -42,6 +45,7 @@
     <ImageView
         android:id="@+id/play"
         android:src="@drawable/play"
+        android:contentDescription="@string/playDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/record_stop"
@@ -54,6 +58,7 @@
     <ImageView
         android:id="@+id/stop"
         android:src="@drawable/stop"
+        android:contentDescription="@string/stopDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/play"
@@ -66,6 +71,7 @@
     <ImageButton
         android:id="@+id/save"
         android:src="@drawable/save"
+        android:contentDescription="@string/saveDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -77,22 +83,28 @@
 		android:layout_below="@id/photo"
 		android:hint="@string/title"/>
 	
+	<EditText android:id="@+id/location" 
+	    android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/title"
+		android:hint="@string/location_hint" />
+	
 	<EditText android:id="@+id/content" 
 	    android:layout_width="match_parent"
-		android:layout_height="fill_parent"
+		android:layout_height="match_parent"
 		android:scrollbars="vertical" 
 		android:gravity="top"
-		android:layout_below="@id/title"
+		android:layout_below="@id/location"
 		android:padding="5dip"
 		android:hint="@string/content_hint"
 		android:background="@color/contentbg"/>
-
+	
 	<ImageView
 	    android:id="@+id/imageView"
+	    android:contentDescription="@string/imageDescription"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentBottom="true"
-	    android:layout_alignParentLeft="true"
-	    android:src="@android:drawable/gallery_thumb" />
+	    android:layout_alignParentLeft="true" />
 	
 </RelativeLayout>

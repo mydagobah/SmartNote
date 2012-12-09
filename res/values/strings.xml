@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-
     <string name="app_name">SmartNote</string>
     <string name="title_activity_list_note">SmartNote</string>
     <string name="menu_new">New</string>
@@ -12,6 +11,7 @@
 	<string name="title">Title</string>
 	<string name="content">Content</string>
 	<string name="content_hint">Type your note here &#8230;</string>
+	<string name="location_hint">Your location &#8230;</string>
 	
 	<string name="enable_gps">GPS Status</string>
 	<string name="enable_gps_dialog">Do you like to enable GPS to store your location, or use Network instead?</string>
@@ -24,4 +24,11 @@
 	<string name="not_support_gps">GPS provider not supported</string>
     <string name="not_support_network">Network provider not supported</string>
 	
+    <string name="photoDescription">Click to insert photo</string>
+    <string name="recordDescription">Click to insert record</string>
+    <string name="stopRecordDescription">Click to stop record</string>
+    <string name="playDescription">Click to play record</string>
+    <string name="stopDescription">Click to stop record</string>
+    <string name="saveDescription">Click to save the current note</string>
+    <string name="imageDescription">The image for the current note</string>
 </resources>

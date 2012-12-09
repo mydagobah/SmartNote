@@ -8,5 +8,6 @@
     <color name="btnbg">#58ACFA</color>
     <color name="navbg">#F0F0F0</color>
     <color name="contentbg">#F3F781</color>
+    <color name="locationbg">#FAFAFA</color>
    
 </resources>

@@ -20,6 +20,7 @@ import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -27,11 +28,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EditNoteActivity extends Activity {
 
 	private EditText titleText;
 	private EditText contentText;
+	private EditText locationText;
 	private Long rowId;
 	private NotesDBAdapter adapter;
 	protected TextView navTitle;
@@ -41,7 +44,6 @@ public class EditNoteActivity extends Activity {
 	protected ImageView stopRecordIcon;
 	protected ImageView playIcon;
 	protected ImageView stopIcon;
-	// display the phote taken by the camera
 	protected ImageView iv;
 	
 	// set up media player
@@ -49,8 +51,7 @@ public class EditNoteActivity extends Activity {
 	private MediaRecorder recorder;
 	
 	// base path for audio file (file with .3gpp format)
-	private static final String AUDIO_PATH = "/sdcard/audio";
-	private static final String PHOTO_PATH = "/sdcard/photo";
+	private String root = Environment.getExternalStorageDirectory().getPath();
 	private String audio_file, photo_file;
 		
 	@Override
@@ -80,31 +81,13 @@ public class EditNoteActivity extends Activity {
             	finish();
             }
         });
-        
-        
+             
         // setup toolbar
         iv = (ImageView) findViewById(R.id.imageView);
         photoIcon = (ImageView) findViewById(R.id.photo);
         photoIcon.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				// initialize photo file
-				/*
-				File _photoFile = new File(photo_file);
-				try {
-					if (!_photoFile.exists()) {
-						_photoFile.createNewFile();
-					}
-				} catch (IOException e) {
-					Toast.makeText(getApplicationContext(), "Create photo fails. Please try again.", 
-							Toast.LENGTH_SHORT).show();
-				}
-				
-				Uri _photoUri = Uri.fromFile(_photoFile);
-				
-				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, _photoUri);
-				*/
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 				startActivityForResult(intent, 0);
 			}
@@ -115,6 +98,7 @@ public class EditNoteActivity extends Activity {
 
         titleText = (EditText) findViewById(R.id.title);
         contentText = (EditText) findViewById(R.id.content);
+        locationText = (EditText) findViewById(R.id.location);
         ImageButton saveButton = (ImageButton) findViewById(R.id.save);
                                              
         rowId = (savedInstanceState == null) ? null :
@@ -129,13 +113,14 @@ public class EditNoteActivity extends Activity {
         // initailize audio path
         if (rowId == null) {
         	Long ts = System.currentTimeMillis();
-        	audio_file = AUDIO_PATH + ts.toString() +".3gpp";
-        	photo_file = PHOTO_PATH + ts.toString() + ".jpeg";
+        	audio_file = root + "/audio" + ts.toString() +".3gpp";
+        	photo_file = root + "/photo" + ts.toString() + ".jpeg";
         }
                 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	setResult(RESULT_OK);          
+            	setResult(RESULT_OK); 
+            	Toast.makeText(getApplicationContext(), "Saved successfully!", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -152,6 +137,11 @@ public class EditNoteActivity extends Activity {
     	}
     }
 	
+    /**
+     * scale photo into 200 x 150 to save space
+     * @param bm
+     * @return
+     */
     private Bitmap scalePhoto(Bitmap bm) {
     	int oldWidth = bm.getWidth();
     	int oldHeight = bm.getHeight();
@@ -166,6 +156,12 @@ public class EditNoteActivity extends Activity {
     	return small;
     }
     
+    /**
+     * save given photo to given path (in sdcard)
+     * @param bm   - photo to save (in Bitmap format)
+     * @param path - file path to save photo
+     * @return
+     */
     private boolean savePhoto(Bitmap bm, String path) {
     	ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     	bm.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
@@ -186,6 +182,11 @@ public class EditNoteActivity extends Activity {
     	return true;
     }
     
+    /**
+     * Read photo from given file path
+     * @param path
+     * @return - Bitmap
+     */
     private Bitmap readPhotoFromPath(String path) {
     	FileInputStream in;
     	BufferedInputStream buf;
@@ -242,11 +243,13 @@ public class EditNoteActivity extends Activity {
 
     /** End of buttonTapped method for recording buttons */
 
+    // stop play record file
 	private void stopPlayback() {
 		if (mediaPlayer != null) 
 		    mediaPlayer.stop();
 	}
 
+	// start play record file
 	private void playRecoding() throws Exception {
 		ditchMediaPlayer();
 		mediaPlayer = new MediaPlayer();
@@ -255,6 +258,7 @@ public class EditNoteActivity extends Activity {
 		mediaPlayer.start();
 	}
 
+	// prepare Mediaplayer
 	private void ditchMediaPlayer() {
 		if (mediaPlayer != null) {
 			try {
@@ -265,12 +269,14 @@ public class EditNoteActivity extends Activity {
 		}
 	}
 
+	// stop recording 
 	private void stopRecoding() {
 		if (recorder != null) {
 			recorder.stop();
 		}
 	}
 
+	// start recording
 	private void beginRecoding() throws Exception {
 		ditchMediaRecorder();
 		File outFile = new File(audio_file);
@@ -288,6 +294,7 @@ public class EditNoteActivity extends Activity {
 		
 	}
 
+	// prepare mediaRecorder
 	private void ditchMediaRecorder() {
 		if(recorder != null)
             recorder.release();
@@ -306,6 +313,8 @@ public class EditNoteActivity extends Activity {
                     note.getColumnIndexOrThrow(NoteTable.COLUMN_TITLE)));
             contentText.setText(note.getString(
                     note.getColumnIndexOrThrow(NoteTable.COLUMN_CONTENT)));
+            locationText.setText(note.getString(
+            		note.getColumnIndexOrThrow(NoteTable.COLUMN_LOCATION)));
             audio_file = note.getString(
             		note.getColumnIndexOrThrow(NoteTable.COLUMN_RECORD_PH));
             photo_file = note.getString(
@@ -337,21 +346,24 @@ public class EditNoteActivity extends Activity {
         populateFields();
     }
     
+    /**
+     * when finish editing, save to db and current id.
+     */
     private void saveState() {
         String title = titleText.getText().toString();
         String content = contentText.getText().toString();
+        String location = locationText.getText().toString();
 
         if (rowId == null) {
         	// if title is empty, do not save
         	if (title.isEmpty()) return;
         	
-            long id = adapter.createNote(title, content, audio_file, photo_file);
+            long id = adapter.createNote(title, content, audio_file, photo_file, location);
             if (id > 0) {
                 rowId = id;
             }
         } else {
-            adapter.updateNote(rowId, title, content);
+            adapter.updateNote(rowId, title, content, location);
         }
-    }
-       
+    }      
 }

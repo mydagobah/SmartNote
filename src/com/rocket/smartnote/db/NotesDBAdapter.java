@@ -58,7 +58,7 @@ public class NotesDBAdapter {
      * @param body - the body of the note
      * @return rowId or -1 if failed
      */
-    public long createNote(String title, String body, String audio_path, String photo_path) {
+    public long createNote(String title, String body, String audio_path, String photo_path, String loc) {
     	   	
         ContentValues initialValues = new ContentValues();
         Calendar cal = Calendar.getInstance();
@@ -68,7 +68,14 @@ public class NotesDBAdapter {
         initialValues.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
         initialValues.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
         initialValues.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
-        initialValues.put(NoteTable.COLUMN_LOCATION, location.getLocation());
+        String autoLoc = location.getLocation();
+        if ((autoLoc.equals("Unknow") || autoLoc.equals("Location not available")) && loc != null) {
+        	initialValues.put(NoteTable.COLUMN_LOCATION, loc);
+        }
+        else {
+        	initialValues.put(NoteTable.COLUMN_LOCATION, location.getLocation());
+        }
+        
         initialValues.put(NoteTable.COLUMN_RECORD_PH, audio_path);
         initialValues.put(NoteTable.COLUMN_PHOTO_PH, photo_path);
         
@@ -122,7 +129,7 @@ public class NotesDBAdapter {
      * @param body - value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateNote(long rowId, String title, String body) {
+    public boolean updateNote(long rowId, String title, String body, String loc) {
     	if ((title == null) || (title.equals(""))) return false;
     	
     	Calendar cal = Calendar.getInstance();
@@ -133,7 +140,8 @@ public class NotesDBAdapter {
         args.put(NoteTable.COLUMN_MONTH, cal.get(Calendar.MONTH) + 1); 
         args.put(NoteTable.COLUMN_DAY, cal.get(Calendar.DAY_OF_MONTH));
         args.put(NoteTable.COLUMN_YEAR, cal.get(Calendar.YEAR));
-        args.put(NoteTable.COLUMN_LOCATION, location.getLocation());
+        if (loc != null)
+        	args.put(NoteTable.COLUMN_LOCATION, loc);
 
         return db.update(NoteTable.TABLE_NAME, args, 
         		NoteTable.COLUMN_ID + "=" + rowId, null) > 0;

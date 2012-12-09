@@ -63,7 +63,6 @@ public class ListNoteActivity extends CustomWindow {
         }
         locHandler.captureLocation();
         
-        
         // populate data
         fillData();
         registerForContextMenu(getListView());
@@ -77,7 +76,7 @@ public class ListNoteActivity extends CustomWindow {
     }
     
     /**
-     * Fetch all notes from DB and list their title in the list view
+     * Fetch all notes from DB and list date, title, locaiton and image in the list view
      */
     private void fillData() {
     	Cursor notesCursor = adapter.fetchAllNotes();
@@ -128,6 +127,9 @@ public class ListNoteActivity extends CustomWindow {
         menu.add(0, DELETE_ID, 0, R.string.menu_delete);
     }
 
+    /**
+     * method for deleting note 
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -161,7 +163,7 @@ public class ListNoteActivity extends CustomWindow {
     }
     
     /**
-     * 
+     * callback method from edit_note_activity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -191,13 +193,13 @@ public class ListNoteActivity extends CustomWindow {
 		     }).create().show();
      }
     
- // Method to launch GPS Settings
+    // Method to launch GPS Settings
     private void enableGPSSettings() {
         Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(settingsIntent);
     }
     
- // Method to launch Network Settings
+    // Method to launch Network Settings
     private void enableNetworkSettings() {
         Intent settingsIntent = new Intent(Intent.ACTION_MAIN);
         settingsIntent.setClassName("com.android.phone", "com.android.phone.NetworkSetting");

@@ -33,15 +33,27 @@ public class LocationHandler {
 	public String getLocation() {
 		return latest;
     }
-		
+	
+	/**
+	 * check if GPS is enabled or not
+	 * @return
+	 */
 	public boolean gpsEnabled() {
 		return locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
 	
+	/**
+	 * check if Network is enabled or not
+	 * @return
+	 */
 	public boolean networkEnabled() {
 		return locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 	}
 	
+	/**
+	 * fetch current location for GPS or Network
+	 * @return
+	 */
 	public void captureLocation() {		
 		Location gpsLocation = null;
         Location networkLocation = null;
@@ -65,6 +77,13 @@ public class LocationHandler {
         }
 	}
 	
+	/**
+	 * update location from given provider
+	 * 
+	 * @param provider
+	 * @param errorResId
+	 * @return
+	 */
 	private Location requestUpdatesFromProvider(final String provider, final int errorResId) {
         Location location = null;
        
@@ -74,7 +93,11 @@ public class LocationHandler {
         }
         return location;
     }
-		
+	
+	/**
+	 * Update location information
+	 * @param location
+	 */
 	private void updateLocation(Location location) {	        
     	// Since the geocoding API is synchronous and may take a while.  You don't want to lock
         // up the UI thread.  Invoking reverse geocoding in an AsyncTask.
@@ -98,6 +121,9 @@ public class LocationHandler {
         }
     }
 	
+	/**
+	 * location listener
+	 */
 	private final LocationListener listener = new LocationListener() {	
         @Override
         public void onLocationChanged(Location location) {
